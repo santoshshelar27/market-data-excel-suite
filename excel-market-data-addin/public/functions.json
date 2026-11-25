@@ -1,0 +1,74 @@
+{
+    "allowCustomDataForDataTypeAny": true,
+    "functions": [
+        {
+            "description": "Streams the latest trade price for a given symbol.",
+            "id": "PRICE",
+            "name": "PRICE",
+            "options": {
+                "stream": true
+            },
+            "parameters": [
+                {
+                    "description": "Ticker symbol (e.g., \"AAPL\").",
+                    "name": "symbol",
+                    "type": "string"
+                }
+            ],
+            "result": {}
+        },
+        {
+            "description": "Streams the latest bid price for a given symbol.",
+            "id": "BID",
+            "name": "BID",
+            "options": {
+                "stream": true
+            },
+            "parameters": [
+                {
+                    "description": "Ticker symbol (e.g., \"AAPL\").",
+                    "name": "symbol",
+                    "type": "string"
+                }
+            ],
+            "result": {}
+        },
+        {
+            "description": "Streams the latest ask price for a given symbol.",
+            "id": "ASK",
+            "name": "ASK",
+            "options": {
+                "stream": true
+            },
+            "parameters": [
+                {
+                    "description": "Ticker symbol (e.g., \"AAPL\").",
+                    "name": "symbol",
+                    "type": "string"
+                }
+            ],
+            "result": {}
+        },
+        {
+            "description": "Streams any named JSON field from the market data feed for a given symbol.",
+            "id": "FIELD",
+            "name": "FIELD",
+            "options": {
+                "stream": true
+            },
+            "parameters": [
+                {
+                    "description": "Ticker symbol (e.g., \"AAPL\").",
+                    "name": "symbol",
+                    "type": "string"
+                },
+                {
+                    "description": "JSON property name (e.g., \"volume\", \"changePct\").",
+                    "name": "fieldName",
+                    "type": "string"
+                }
+            ],
+            "result": {}
+        }
+    ]
+}

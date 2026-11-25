@@ -1,0 +1,15 @@
+# Dependencies & build outputs
+node_modules/
+dist/
+release/
+tmp/
+out-tsc/
+.angular/cache/
+
+# Generated TLS certificates and private keys
+excel-market-data-addin/electron-setup/certs/
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db

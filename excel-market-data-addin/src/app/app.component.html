@@ -1,0 +1,80 @@
+<div class="taskpane">
+  <header class="header">
+    <div>
+      <h1>Market Data Feed</h1>
+      <p class="subtitle">Offline Excel Streaming Add-in</p>
+    </div>
+    <span class="badge" [class]="ws.connectionState()">
+      {{ ws.connectionState() }}
+    </span>
+  </header>
+
+  <section class="card">
+    <label class="label" for="ws-url">Electron WebSocket URL</label>
+    <div class="url-row">
+      <input
+        id="ws-url"
+        type="text"
+        [(ngModel)]="urlInput"
+        placeholder="wss://localhost:3443/ws"
+      />
+      <button type="button" class="btn primary" (click)="applyUrl()">Save</button>
+    </div>
+    <div class="actions">
+      <button
+        type="button"
+        class="btn"
+        [disabled]="ws.connectionState() === 'connected'"
+        (click)="ws.connect()"
+      >
+        Connect
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [disabled]="ws.connectionState() === 'disconnected'"
+        (click)="ws.disconnect()"
+      >
+        Disconnect
+      </button>
+      <button type="button" class="btn" (click)="ws.reconnect()">Reconnect</button>
+    </div>
+    @if (ws.lastError()) {
+      <p class="error">{{ ws.lastError() }}</p>
+    }
+  </section>
+
+  <section class="card stats">
+    <div class="stat">
+      <span class="stat-label">Ticks Received</span>
+      <span class="stat-value">{{ ws.tickCount() }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Last Tick</span>
+      <span class="stat-value">{{ ws.lastMessageAt() || '—' }}</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Active Symbols ({{ ws.activeSymbols().length }})</h2>
+    @if (ws.activeSymbols().length === 0) {
+      <p class="muted">No active formulas. Enter a formula in Excel to subscribe.</p>
+    } @else {
+      <div class="chips">
+        @for (sym of ws.activeSymbols(); track sym) {
+          <span class="chip">{{ sym }}</span>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="card">
+    <h2>Custom Functions</h2>
+    <ul class="formulas">
+      <li><code>=MARKET.PRICE("AAPL")</code></li>
+      <li><code>=MARKET.BID("AAPL")</code></li>
+      <li><code>=MARKET.ASK("AAPL")</code></li>
+      <li><code>=MARKET.FIELD("AAPL", "volume")</code></li>
+    </ul>
+  </section>
+</div>

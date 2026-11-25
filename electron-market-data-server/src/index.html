@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MarketData Server</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    p { font-size: 13px; color: #94a3b8; margin: 0 0 16px; }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .row:last-child { margin-bottom: 0; }
+    .val { font-weight: 600; color: #38bdf8; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chip {
+      background: #0ea5e9;
+      color: #082f49;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>MarketData Local Server</h1>
+  <p>Hosting offline Excel Add-in &amp; WSS stream</p>
+
+  <div class="card">
+    <div class="row"><span>HTTPS Endpoint</span><span class="val" id="https-url">https://localhost:3443</span></div>
+    <div class="row"><span>WebSocket Endpoint</span><span class="val" id="ws-url">wss://localhost:3443/ws</span></div>
+    <div class="row"><span>Connected Excel Clients</span><span class="val" id="clients">0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><span>Subscribed Symbols</span></div>
+    <div class="chips" id="symbols">None</div>
+  </div>
+
+  <script>
+    function render(status) {
+      document.getElementById('https-url').textContent = `https://localhost:${status.port}`;
+      document.getElementById('ws-url').textContent = `wss://localhost:${status.port}/ws`;
+      document.getElementById('clients').textContent = String(status.clients);
+      const container = document.getElementById('symbols');
+      if (!status.symbols || status.symbols.length === 0) {
+        container.textContent = 'None';
+      } else {
+        container.innerHTML = status.symbols.map((s) => `<span class="chip">${s}</span>`).join('');
+      }
+    }
+
+    window.marketServer.getStatus().then(render);
+    window.marketServer.onStatus(render);
+  </script>
+</body>
+</html>

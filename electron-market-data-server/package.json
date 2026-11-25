@@ -1,0 +1,64 @@
+{
+  "name": "electron-market-data-server",
+  "version": "1.0.0",
+  "description": "Offline Electron host and WebSocket market data server for the Excel Add-in",
+  "main": "src/main.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "electron .",
+    "build:addin": "npm --prefix ../excel-market-data-addin run build",
+    "dist:win": "npm run build:addin && electron-builder --win",
+    "dist:mac": "npm run build:addin && electron-builder --mac"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.yourcompany.marketdata",
+    "productName": "MarketData",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../excel-market-data-addin/dist/excel-market-data-addin/browser",
+        "to": "addin"
+      },
+      {
+        "from": "../excel-market-data-addin/manifest.xml",
+        "to": "manifest.xml"
+      },
+      {
+        "from": "../excel-market-data-addin/electron-setup/certs",
+        "to": "certs"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "include": "../excel-market-data-addin/electron-setup/windows/installer.nsh"
+    },
+    "mac": {
+      "target": [
+        "pkg"
+      ]
+    },
+    "pkg": {
+      "scripts": "../excel-market-data-addin/electron-setup/macos"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# macOS .pkg postinstall script (runs as root via installer)
+APP_RESOURCES="/Applications/MarketData.app/Contents/Resources"
+ROOT_CA="$APP_RESOURCES/certs/rootCA.crt"
+MANIFEST_SRC="$APP_RESOURCES/manifest.xml"
+
+# 1. Trust the local Root CA in System Keychain
+if [ -f "$ROOT_CA" ]; then
+  security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "$ROOT_CA"
+fi
+
+# 2. Sideload manifest.xml into the active console user's Excel wef folder
+CURRENT_USER=$(stat -f "%Su" /dev/console)
+USER_HOME=$(dscl . -read "/Users/$CURRENT_USER" NFSHomeDirectory | awk '{print $2}')
+WEF_DIR="$USER_HOME/Library/Containers/com.microsoft.Excel/Data/Documents/wef"
+
+if [ -f "$MANIFEST_SRC" ] && [ -n "$USER_HOME" ]; then
+  mkdir -p "$WEF_DIR"
+  cp "$MANIFEST_SRC" "$WEF_DIR/manifest.xml"
+  chown -R "$CURRENT_USER" "$WEF_DIR"
+fi
+
+exit 0
